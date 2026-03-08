@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Localify — Site de présentation complet</title>
+  <meta name="description" content="Localify : serveur musical personnel auto-hébergé. Découvrez les fonctionnalités, la mise en route, les cas d'usage, FAQ et liens utiles." />
+  <style>
+    :root {
+      --bg: #070b16;
+      --surface: rgba(255,255,255,.05);
+      --surface-2: rgba(255,255,255,.08);
+      --text: #eef1ff;
+      --muted: #a8b2d8;
+      --accent: #7a7dff;
+      --accent-2: #35d5b1;
+      --border: rgba(255,255,255,.14);
+      --ok: #8ef7ca;
+      --warn: #ffd27a;
+      --danger: #ff9ba7;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.6;
+      background:
+        radial-gradient(circle at 90% 0%, rgba(122,125,255,.24), transparent 35%),
+        radial-gradient(circle at 10% 15%, rgba(53,213,177,.14), transparent 30%),
+        var(--bg);
+    }
+
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 22px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(8,12,24,.65);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 66px;
+    }
+
+    .brand { font-weight: 800; letter-spacing: .2px; font-size: 20px; }
+    .brand span { color: var(--accent-2); }
+
+    .nav { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      border: 1px solid transparent;
+    }
+    .nav a:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,.04); }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary { background: linear-gradient(120deg, var(--accent), #676bff); border-color: transparent; }
+    .btn.secondary { background: linear-gradient(120deg, rgba(53,213,177,.2), rgba(53,213,177,.12)); }
+
+    header.hero { padding: 44px 0 24px; }
+    .hero-card {
+      border: 1px solid var(--border);
+      background: linear-gradient(140deg, rgba(122,125,255,.2), rgba(53,213,177,.08));
+      border-radius: 22px;
+      padding: 34px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #fff;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.12);
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+
+    h1 { margin: 14px 0 8px; font-size: clamp(30px, 5vw, 52px); line-height: 1.1; }
+    .lead { color: #d3dcff; max-width: 850px; font-size: 16px; }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 10px; margin-top: 20px; }
+    .kpi { border: 1px solid var(--border); background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px; }
+    .kpi .v { font-size: 21px; font-weight: 800; }
+    .kpi .l { color: var(--muted); font-size: 12px; }
+
+    section { padding: 18px 0; }
+    .section-title { font-size: 30px; margin: 4px 0 12px; }
+    .section-sub { color: var(--muted); margin: 0 0 14px; }
+
+    .grid-3 { display:grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap:12px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .card h3 { margin: 2px 0 8px; font-size: 18px; }
+    .card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .split { display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; }
+
+    .steps { display: grid; gap: 10px; }
+    .step {
+      display:flex; gap:12px; align-items:flex-start;
+      border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 12px;
+    }
+    .n {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid var(--border); background: rgba(122,125,255,.26);
+      display:flex; align-items:center; justify-content:center; font-weight: 700; flex-shrink: 0;
+    }
+    .step p { margin: 0; color: var(--muted); }
+
+    .faq { display:grid; gap:10px; }
+    .faq details {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      padding: 10px 12px;
+    }
+    .faq summary { cursor: pointer; font-weight: 700; }
+    .faq p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+
+    .cta {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: linear-gradient(120deg, rgba(53,213,177,.16), rgba(122,125,255,.2));
+      padding: 20px;
+      text-align: center;
+      margin: 12px 0 22px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 16px 0 26px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .chip-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .chip { border:1px solid var(--border); border-radius: 999px; padding: 5px 10px; font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .split { grid-template-columns: 1fr; }
+      .topbar-inner { align-items: flex-start; padding: 10px 0; }
+      .hero-card { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">Localify<span>.</span></div>
+      <nav class="nav">
+        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#cas-usage">Cas d'usage</a>
+        <a href="#demarrage">Démarrage</a>
+        <a href="#parametres">Paramètres</a>
+        <a href="#administration">Administration</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container hero-card">
+      <span class="badge">🎵 Serveur musical personnel auto-hébergé</span>
+      <h1>Le site complet pour comprendre <br/>à quoi sert Localify</h1>
+      <p class="lead">
+        Localify vous permet de centraliser votre musique chez vous, l’écouter depuis n’importe quel appareil,
+        organiser votre bibliothèque, créer des playlists et personnaliser votre expérience sans dépendre d’un service externe.
+      </p>
+      <div class="hero-actions">
+        <a class="btn secondary" href="https://github.com/juliojuuuuu/-Localify" target="_blank" rel="noopener">💻 GitHub</a>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="v">100%</div><div class="l">Auto-hébergé / personnel</div></div>
+        <div class="kpi"><div class="v">Web + PWA</div><div class="l">PC, mobile, tablette</div></div>
+        <div class="kpi"><div class="v">Widget</div><div class="l">Contrôle desktop synchronisé</div></div>
+        <div class="kpi"><div class="v">Personnalisation</div><div class="l">Thèmes, EQ, focus, gestures</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="fonctionnalites">
+      <h2 class="section-title">Fonctionnalités principales</h2>
+      <p class="section-sub">Tout ce qu’il faut pour transformer votre dossier <code>music/</code> en app complète.</p>
+      <div class="grid-3">
+        <article class="card"><h3>📚 Bibliothèque intelligente</h3><p>Navigation artistes/albums/playlists, recherche rapide, favoris et covers.</p></article>
+        <article class="card"><h3>🎧 Lecteur moderne</h3><p>Queue, repeat/shuffle, mode focus, historique, vitesse de lecture et contrôles clavier.</p></article>
+        <article class="card"><h3>🎚️ Personnalisation UX</h3><p>Thèmes, visualiseur, options mobiles, égaliseur simple et préférences utilisateur.</p></article>
+        <article class="card"><h3>🪟 Widget bureau</h3><p>Mini-lecteur détaché synchronisé avec le player principal (widget ↔ app).</p></article>
+        <article class="card"><h3>⚙️ Outils système</h3><p>Rescan musique, diagnostic serveur, accès dossier musique, backups/import/export.</p></article>
+        <article class="card"><h3>🔒 Usage personnel sécurisé</h3><p>Auth locale, déploiement privé recommandé (Tailscale), pas d’expo publique nécessaire.</p></article>
+      </div>
+    </section>
+
+    <section id="cas-usage" class="split">
+      <div>
+        <h2 class="section-title">Cas d’usage</h2>
+        <div class="steps">
+          <div class="step"><div class="n">1</div><p><strong>Remplacer un lecteur local dispersé :</strong> unifier votre collection sur un seul serveur.</p></div>
+          <div class="step"><div class="n">2</div><p><strong>Écouter partout :</strong> maison, bureau, mobile, via navigateur ou PWA.</p></div>
+          <div class="step"><div class="n">3</div><p><strong>Collection familiale :</strong> partager la même base musicale sur le réseau local.</p></div>
+          <div class="step"><div class="n">4</div><p><strong>Expérience personnalisée :</strong> thème, EQ, queue visuelle, playlists intelligentes.</p></div>
+        </div>
+      </div>
+      <aside class="card">
+        <h3>✅ Ce que Localify n’est pas</h3>
+        <p>Ce n’est pas un service de streaming public. C’est un serveur personnel, pensé pour votre propre bibliothèque.</p>
+        <div class="chip-row">
+          <span class="chip">🎯 Usage perso</span>
+          <span class="chip">🏠 Réseau local</span>
+          <span class="chip">🌐 Accès privé</span>
+        </div>
+      </aside>
+    </section>
+
+    <section id="demarrage">
+      <h2 class="section-title">Démarrage rapide</h2>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><p>Installez Node.js LTS puis vérifiez avec <code>node -v</code> et <code>npm -v</code>.</p></div>
+        <div class="step"><div class="n">2</div><p>Dans le dossier du projet, lancez <code>npm install</code>.</p></div>
+        <div class="step"><div class="n">3</div><p>Démarrez l’app avec <code>npm start</code> puis ouvrez <code>http://localhost:3000</code>.</p></div>
+        <div class="step"><div class="n">4</div><p>Ajoutez vos fichiers dans <code>music/Artiste/Album</code> et connectez-vous (admin / admin123456 au 1er démarrage).</p></div>
+      </div>
+    </section>
+
+
+
+    <section id="parametres">
+      <h2 class="section-title">⚙️ Paramètres ultra complets</h2>
+      <p class="section-sub">Localify permet de tout ajuster : accueil, lecteur, mobile, système et compte.</p>
+      <div class="grid-3">
+        <article class="card"><h3>🏠 Accueil personnalisable</h3><p>Déplacement des blocs (↑/↓), affichage/masquage, section outils, stats, artistes et playlists.</p></article>
+        <article class="card"><h3>🎵 Actions pistes</h3><p>Clic droit + barre d’actions configurable : ajouter, favoris, file d’attente, YouTube.</p></article>
+        <article class="card"><h3>🎛️ Interface lecteur</h3><p>Contrôle des boutons player/focus, style visuel, visualiseur, options UX avancées.</p></article>
+        <article class="card"><h3>🎨 Thème & ambiance</h3><p>Thèmes prédéfinis/personnalisés, blur, sidebar, contraste, particules animées.</p></article>
+        <article class="card"><h3>💾 Système</h3><p>Minuteur, reconnexion auto, haptics, swipes, export/import, rescan musique, diagnostic.</p></article>
+        <article class="card"><h3>👤 Compte</h3><p>Avatar, mot de passe, déconnexion et bouton clé <strong>📁 Ouvrir dossier musique</strong>.</p></article>
+      </div>
+    </section>
+
+    <section id="administration" class="split">
+      <div>
+        <h2 class="section-title">🛡️ Administration serveur</h2>
+        <div class="steps">
+          <div class="step"><div class="n">1</div><p><strong>Statistiques globales :</strong> utilisateurs, titres, playlists.</p></div>
+          <div class="step"><div class="n">2</div><p><strong>Gestion comptes :</strong> recherche, tri, suppression et export utilisateur.</p></div>
+          <div class="step"><div class="n">3</div><p><strong>Paramètres globaux :</strong> inscriptions, limite playlists, thème global forcé.</p></div>
+          <div class="step"><div class="n">4</div><p><strong>Évolutions prévues :</strong> liaison SoundCloud / Spotify.</p></div>
+        </div>
+      </div>
+      <aside class="card">
+        <h3>🔐 Accès restreint</h3>
+        <p>Le panneau Administration est réservé au compte qui a configuré le serveur Localify.</p>
+        <div class="chip-row">
+          <span class="chip">Admin only</span>
+          <span class="chip">Gestion centralisée</span>
+          <span class="chip">Outils serveur</span>
+        </div>
+      </aside>
+    </section>
+
+
+    <section id="faq">
+      <h2 class="section-title">FAQ</h2>
+      <div class="faq">
+        <details>
+          <summary>Puis-je utiliser Localify depuis mon téléphone ?</summary>
+          <p>Oui. Ouvrez l’URL du serveur dans votre navigateur mobile, puis ajoutez-la à l’écran d’accueil pour un usage PWA.</p>
+        </details>
+        <details>
+          <summary>Comment accéder à distance en sécurité ?</summary>
+          <p>Le plus simple est d’utiliser un réseau privé comme Tailscale plutôt qu’une exposition publique du port.</p>
+        </details>
+        <details>
+          <summary>Que faire si la bibliothèque est vide ?</summary>
+          <p>Vérifiez la structure <code>music/Artiste/Album</code>, les extensions audio supportées et lancez un rescan depuis Paramètres.</p>
+        </details>
+        <details>
+          <summary>Pourquoi un diagnostic système ?</summary>
+          <p>Pour voir rapidement l’état du serveur (uptime, cache, index musique) et faciliter le dépannage.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="cta">
+      <h2 style="margin:0 0 8px;">Prêt à créer votre serveur musical perso ?</h2>
+      <p style="margin:0 0 14px; color:#e9f7ff;">Lancez Localify en quelques minutes et profitez d’une expérience musicale maîtrisée de bout en bout.</p>
+      <div class="hero-actions" style="justify-content:center; margin-top:0;">
+        <a class="btn primary" href="https://github.com/juliojuuuuu/-Localify" target="_blank" rel="noopener">💻 GitHub Localify</a>
+        <a class="btn" href="https://github.com/juliojuuuuu/localify-client" target="_blank" rel="noopener">🖥️ GitHub Client Desktop</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Localify · Site de présentation complet · Conçu pour l’auto-hébergement personnel
+  </footer>
+</body>
+</html>
